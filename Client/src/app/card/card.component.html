@@ -1,0 +1,6 @@
+<div *ngIf="suit !== 'wild'">
+  <img [src]="getSrc()" class="not-wild" /><span>{{ _number }}</span>
+</div>
+<div *ngIf="suit == 'wild'">
+  <img [src]="getWildSrc()" class="wild" />
+</div>

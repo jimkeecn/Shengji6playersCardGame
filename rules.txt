@@ -1,0 +1,30 @@
+after other 5 players joined, admin can start the game.
+
+login system:
+
+save 6 different user into memory
+[junxi,123456789:admin] [sally,123456789,player],[kevin,123456789,player],[gary,123456789,player],
+[yuki,123456789,player],[summer,123456789,player]
+
+after user login to the website, it require a login, after login, username and password will be saved into browser memory, if the player has logined before, the game does not require second login if they dont logout.
+
+admin can [reset game],[restart round],[start game only 6 players are there].
+
+the game always started at [level 2] of each player.
+
+the game have 3 decks of cards which is [54 * 3 = 162] cards
+
+the game have 6 position [1,2,3,4,5,6], player will play in order.
+
+[Player] will gain level if they collect each 40 points after 120 points.
+
+[Gamer] will gain level if [player] only collect [3level,0], [2level,<60], [1level,60>p<120]
+
+[GamerLeader] will have 26 cards + 6 cards extra.
+[GamerLeader] can swap card with the 6 extra cards.[swap array]
+
+Player can choose multiple card from one particular category.
+
+
+
+

@@ -1,0 +1,189 @@
+<div class="main-board">
+  <div class="game-info">
+    <h4>本局级别 : {{ (game.gameInfo$ | async).currentPlayingLevel }}</h4>
+    <h4>
+      本局的庄家是：
+      {{ (game.gameInfo$ | async).currentPlayingLeadPlayerName }}
+    </h4>
+    <h4 *ngIf="!(game.gameInfo$ | async).callLead?.userName">还没有人叫花色</h4>
+    <h4 *ngIf="(game.gameInfo$ | async).callLead?.userName">
+      {{ (game.gameInfo$ | async).callLead?.userName }} 叫了
+      {{ (game.gameInfo$ | async).callLead?.calledSuit }}(
+      {{ (game.gameInfo$ | async).callLead?.calledCards.length }}个) 为主花色
+    </h4>
+    <h4 *ngIf="checkWhosTurn()">现在{{ checkWhosTurn() }}在进行出牌中...</h4>
+  </div>
+  <!-- <div class="game-players">
+    <div class="player">
+      <h2>Name: Junxi</h2>
+      <h4>Level : 2</h4>
+      <div>[Hand up]</div>
+      <div class="round-cards">
+        <div class="card"></div>
+        <div class="card"></div>
+        <div class="card"></div>
+        <div class="card"></div>
+        <div class="card"></div>
+      </div>
+    </div>
+    <div class="player">
+      <h2>Name: Junxi</h2>
+      <h4>Level : 2</h4>
+      <div>[Hand up]</div>
+      <div class="round-cards">
+        <div class="card"></div>
+        <div class="card"></div>
+        <div class="card"></div>
+        <div class="card"></div>
+        <div class="card"></div>
+      </div>
+    </div>
+    <div class="player">
+      <h2>Name: Junxi</h2>
+      <h4>Level : 2</h4>
+      <div>[Hand up]</div>
+      <div class="round-cards">
+        <div class="card"></div>
+        <div class="card"></div>
+        <div class="card"></div>
+        <div class="card"></div>
+        <div class="card"></div>
+      </div>
+    </div>
+    <div class="player">
+      <h2>Name: Junxi</h2>
+      <h4>Level : 2</h4>
+      <div>[Hand up]</div>
+      <div class="round-cards">
+        <div class="card"></div>
+        <div class="card"></div>
+        <div class="card"></div>
+        <div class="card"></div>
+        <div class="card"></div>
+      </div>
+    </div>
+    <div class="player">
+      <h2>Name: Junxi</h2>
+      <h4>Level : 2</h4>
+      <div>[Hand up]</div>
+      <div class="round-cards">
+        <div class="card"></div>
+        <div class="card"></div>
+        <div class="card"></div>
+        <div class="card"></div>
+        <div class="card"></div>
+      </div>
+    </div>
+  </div> -->
+  <div class="game-me">
+    <div class="me-info">本人级别 : {{ (game.myInfo$ | async).level }}</div>
+    <ng-container *ngIf="(game.gameInfo$ | async).isShuffling">
+      <div>叫的主:</div>
+      <div class="round-cards">
+        <div class="card" *ngFor="let card of leadCards">
+          <app-card [suit]="card.suit" [number]="card.number"></app-card>
+        </div>
+        <button type="button" (click)="leadCards = []">Reset</button>
+      </div>
+    </ng-container>
+    <ng-container
+      *ngIf="
+        (game.gameInfo$ | async).isSwaping &&
+        (game.gameInfo$ | async).currentPlayingLeadPlayerId !==
+          (game.userGuid$ | async)
+      "
+    >
+      <h4>
+        正在等待 {{ (game.gameInfo$ | async).callLead.userName }} 进行底牌置换。
+      </h4>
+    </ng-container>
+    <ng-container
+      *ngIf="
+        (game.gameInfo$ | async).isSwaping &&
+        (game.gameInfo$ | async).currentPlayingLeadPlayerId ==
+          (game.userGuid$ | async)
+      "
+    >
+      <div>底牌:</div>
+      <div class="round-cards">
+        <div
+          class="card"
+          *ngFor="let card of (game.gameInfo$ | async).trailCards"
+          (click)="addToTrailSwap(card)"
+        >
+          <app-card [suit]="card.suit" [number]="card.number"></app-card>
+        </div>
+      </div>
+      <div>留底:</div>
+      <div class="round-cards">
+        <div
+          class="card"
+          *ngFor="let card of swapTrailedCards"
+          (click)="removeTrailSwap(card)"
+        >
+          <app-card [suit]="card.suit" [number]="card.number"></app-card>
+        </div>
+      </div>
+      <div>弃牌:</div>
+      <div class="round-cards">
+        <div
+          class="card"
+          *ngFor="let card of swapOwnedCards"
+          (click)="removeOwnedSwap(card)"
+        >
+          <app-card [suit]="card.suit" [number]="card.number"></app-card>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="(game.myInfo$ | async).isTurn">
+      <div>准备要出的牌：</div>
+      <div class="round-cards">
+        <div
+          class="card"
+          *ngFor="let card of readySentCards"
+          (click)="removeCard(card)"
+        >
+          <app-card [suit]="card.suit" [number]="card.number"></app-card>
+        </div>
+      </div>
+    </ng-container>
+    <div>本牌:</div>
+    <div class="round-cards" *ngIf="(game.gameInfo$ | async).isReady">
+      <div
+        class="card"
+        *ngFor="let card of (game.myInfo$ | async).currentDeck"
+        (click)="cardAction(card)"
+      >
+        <app-card [suit]="card.suit" [number]="card.number"></app-card>
+      </div>
+    </div>
+    <div class="action-bar">
+      <button
+        type="button"
+        (click)="callLead()"
+        *ngIf="(game.gameInfo$ | async).isShuffling"
+      >
+        叫花色
+      </button>
+      <button
+        type="button"
+        (click)="swapCard()"
+        *ngIf="
+          (game.gameInfo$ | async).isSwaping &&
+          (game.gameInfo$ | async).currentPlayingLeadPlayerId ==
+            (game.userGuid$ | async)
+        "
+      >
+        置换
+      </button>
+      <button
+        type="button"
+        (click)="sendCard()"
+        *ngIf="(game.myInfo$ | async).isTurn"
+      >
+        出牌
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,57 @@
+<div class="login" *ngIf="!(game.gameInfo$ | async).isReady">
+  <input
+    type="text"
+    [(ngModel)]="text"
+    placeholder="please fill your username"
+    *ngIf="!(game.userGuid$ | async)"
+  />
+  <button
+    type="button"
+    class="login"
+    *ngIf="!(game.userGuid$ | async)"
+    (click)="joinGame()"
+  >
+    Join Game
+  </button>
+
+  <h1>
+    We are still waiting for
+    {{
+      (game.gameInfo$ | async).maxiumnPlayers -
+        (game.gameInfo$ | async).playerNumber
+    }}
+    players to join
+  </h1>
+  <h1 *ngFor="let user of (game.gameInfo$ | async).currentPlayers">
+    {{ user.username }} has joined the game.
+  </h1>
+</div>
+<button
+  type="button"
+  (click)="startShuffle()"
+  *ngIf="(game.gameInfo$ | async).isReady"
+>
+  shuffling
+</button>
+<button
+  type="button"
+  (click)="startSwap()"
+  *ngIf="
+    (game.gameInfo$ | async).isReady &&
+    (game.gameInfo$ | async).isShuffling &&
+    !(game.gameInfo$ | async).isStarted
+  "
+>
+  start swap
+</button>
+<button
+  type="button"
+  (click)="startGameRound()"
+  *ngIf="(game.gameInfo$ | async).isStarted"
+>
+  start round
+</button>
+<button type="button" *ngIf="game.userGuid$ | async" (click)="quitGame()">
+  Quit Game
+</button>
+<app-board *ngIf="(game.gameInfo$ | async).isReady"></app-board>
