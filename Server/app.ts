@@ -56,11 +56,7 @@ io.on("connection", (socket: any) => {
     console.log("new player joined");
     if (game.isReady === false) {
       //Initiate a new user....
-      let player = new USER();
-      player.username = data;
-      if (data.toLowerCase() == "junxi") {
-        player.isAdmin = true;
-      }
+      let player = new USER().CreateNewUser(data);
       player.id = uuidv4();
       emitUserGuid(player.id);
       game.currentPlayers.push(player);
