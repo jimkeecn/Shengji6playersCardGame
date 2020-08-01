@@ -1,0 +1,32 @@
+[
+  {
+    "userName": "Junxi",
+    "password": "123456789",
+    "isAdmin": true
+  },
+  {
+    "userName": "Yuki",
+    "password": "123456789",
+    "isAdmin": false
+  },
+  {
+    "userName": "Summer",
+    "password": "123456789",
+    "isAdmin": false
+  },
+  {
+    "userName": "Gary",
+    "password": "123456789",
+    "isAdmin": false
+  },
+  {
+    "userName": "Sally",
+    "password": "123456789",
+    "isAdmin": false
+  },
+  {
+    "userName": "Kevin",
+    "password": "123456789",
+    "isAdmin": false
+  }
+]
